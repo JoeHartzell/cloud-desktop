@@ -1,0 +1,23 @@
+{
+  "name": "cloud-desktop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "licenses": [
+    {
+      "type": "MIT"
+    }
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "libs/*"
+  ],
+  "keywords": [],
+  "author": "Joe Hartzell <joehartzell1996@icloud.com>",
+  "license": "ISC",
+  "repository": "git@gitlab.com:dimaios-v2/cloud-desktop.git"
+}
