@@ -1,13 +1,20 @@
 <script lang="ts">
-  import { AppShell, AppRail, AppRailAnchor, AppRailTile } from '@skeletonlabs/skeleton'
-  import Router, { } from 'svelte-spa-router'
+  import { AppShell, AppRail, AppRailAnchor } from '@skeletonlabs/skeleton'
+  import Router, { location } from 'svelte-spa-router'
+  import Icon from '@iconify/svelte'
+  import { setAppContext } from '../../context/App'
   import { Header as AppHeader } from './Header'
   import { Login } from './Login'
+  import { Profile } from './Profile'
 
-  let currentTile = 'tile-1';
+  const { profiles, currentProfile } = setAppContext()
+
+  $: profileList = Array.from($profiles.values())
+
   const prefix = '/app'
   const routes = {
-    '/login': Login
+    '/login': Login,
+    '/profile/:id': Profile,
   }
 </script>
 
@@ -22,15 +29,22 @@
         <AppRailAnchor href="/">(icon)</AppRailAnchor>
       </svelte:fragment>
 
-      <AppRailTile bind:group={currentTile} name="tile-1" value={0} title="tile-1">
-        <svelte:fragment slot="lead">
-          <span class="badge bg-primary-600">Desktop</span>
-        </svelte:fragment>
-        <span>us-east-1</span>
-      </AppRailTile>
+      {#each profileList as profile}
+        <AppRailAnchor
+          selected={$currentProfile?.id === profile.id}
+          href={`#/app/profile/${profile.id}`}
+        >
+          <svelte:fragment slot="lead">
+            <span class="badge bg-primary-600">{profile.name}</span>
+          </svelte:fragment>
+          <span>{profile.region}</span>
+        </AppRailAnchor>
+      {/each}
 
       <svelte:fragment slot="trail">
-        <AppRailAnchor href="/" target="_blank" title="Account">(icon)</AppRailAnchor>
+        <AppRailAnchor href="#/app/login">
+          <Icon icon="mdi:add-bold" class="w-6 h-6 inline" />
+        </AppRailAnchor>
       </svelte:fragment>
     </AppRail>
   </svelte:fragment>
@@ -39,5 +53,7 @@
 </AppShell>
 
 <style lang="postcss">
-  :global(html, body) { @apply h-full overflow-hidden; }
+  :global(html, body) {
+    @apply h-full overflow-hidden;
+  }
 </style>

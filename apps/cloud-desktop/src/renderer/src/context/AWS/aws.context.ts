@@ -5,7 +5,7 @@ import superjson from 'superjson'
 import { setContext, getContext } from 'svelte'
 import type { AppRouter } from '../../../../main/api';
 
-const CONTEXT_KEY = Symbol('context:aws');
+const CONTEXT_KEY = Symbol('cloud-desktop:context:aws');
 let client: ReturnType<typeof createTRPCProxyClient<AppRouter>>;
 
 export type AWSRouterOutputs = inferRouterOutputs<AppRouter>['aws'];

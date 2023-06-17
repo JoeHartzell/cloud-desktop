@@ -1,21 +1,32 @@
 <script lang="ts">
-  import { onMount } from "svelte"
-  import Icon from "@iconify/svelte"
-  import { getAWSContext } from "../../../context/AWS";
+  import { onMount } from 'svelte'
+  import { push } from 'svelte-spa-router'
+  import Icon from '@iconify/svelte'
+  import { getAWSContext } from '../../../context/AWS'
+  import { getAppContext } from '../../../context/App'
   import type { AWSRouterOutputs } from '../../../context/AWS/aws.context'
 
-  let profiles: AWSRouterOutputs['profiles'] = [];
-  const { aws } = getAWSContext();
+  let profiles: AWSRouterOutputs['profiles'] = []
+  const { aws } = getAWSContext()
+  const { setCurrentProfile, profiles: appProfiles } = getAppContext()
+
+  // login page should clear the current profile
+  setCurrentProfile(null)
 
   onMount(async () => {
-    profiles = await aws.profiles.query();
+    profiles = await aws.profiles.query()
   })
+
+  function selectProfile(profile: (typeof profiles)[number]) {
+    appProfiles.add(profile)
+    push(`/app/profile/${profile.id}`)
+  }
 </script>
 
 <div class="card mt-4 mx-auto max-w-md bg-gradient-to-br variant-gradient-tertiary-secondary">
   <header class="card-header">
     <h4 class="flex justify-center items-center h4">
-      <Icon icon="mdi:aws" class="h-10 w-10"/>
+      <Icon icon="mdi:aws" class="h-10 w-10" />
       <span class="m-2 pb-1">Credentials</span>
     </h4>
   </header>
@@ -23,7 +34,7 @@
     <ul>
       {#each profiles as profile}
         <li>
-          <a href="#/">
+          <a on:click={() => selectProfile(profile)}>
             <span class="badge bg-primary-600">Profile</span>
             <span class="flex-auto">{profile.name}</span>
             <span class="chip variant-filled">{profile.region}</span>

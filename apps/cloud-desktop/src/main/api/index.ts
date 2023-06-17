@@ -32,7 +32,6 @@ const publicProcedure = t.procedure;
 const s3 = router({
   listBuckets: publicProcedure.query(async ({ ctx }) => {
     // list s3 buckets using the @aws-sdk/client-s3
-    console.log(ctx.credentials);
     const client = new S3Client({
       credentials: ctx.credentials.get(ctx.currentWindowId),
     });
