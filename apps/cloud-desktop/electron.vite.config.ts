@@ -3,6 +3,11 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 
 export default defineConfig({
   main: {
+    build: {
+      watch: {
+        include: ['src/main/**']
+      }
+    },
     plugins: [externalizeDepsPlugin()]
   },
   preload: {

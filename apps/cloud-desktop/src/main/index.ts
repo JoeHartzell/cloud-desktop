@@ -1,8 +1,8 @@
-import { app, shell, BrowserWindow } from 'electron'
+import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { createIPCHandler } from 'electron-trpc/main'
-import { appRouter } from "./api";
+import { appRouter, createContext } from "./api";
 import icon from '../../resources/icon.png?asset'
 
 function createWindow(): void {
@@ -14,13 +14,16 @@ function createWindow(): void {
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
+      contextIsolation: true,
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      nodeIntegrationInSubFrames: true,
+      nodeIntegration: true,
     }
   })
-
+  mainWindow.webContents.openDevTools();
   // add tRPC
-  createIPCHandler({ router: appRouter, windows: [mainWindow] });
+  createIPCHandler({ router: appRouter, windows: [mainWindow],  createContext: createContext() });
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
@@ -30,8 +33,6 @@ function createWindow(): void {
     shell.openExternal(details.url)
     return { action: 'deny' }
   })
-
-
 
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.

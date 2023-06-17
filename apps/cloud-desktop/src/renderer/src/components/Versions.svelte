@@ -8,3 +8,5 @@
   <li>Node v{ versions.node }</li>
   <li>V8 v{ versions.v8 }</li>
 </ul>
+
+<iframe src="#/iframe?naked=false" />

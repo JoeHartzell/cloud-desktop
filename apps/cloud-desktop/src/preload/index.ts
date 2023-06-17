@@ -1,4 +1,4 @@
-import { contextBridge } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 import { exposeElectronTRPC } from 'electron-trpc/main'
 
@@ -22,6 +22,11 @@ if (process.contextIsolated) {
   window.api = api
 }
 
+
+
 process.once('loaded', () => {
+  ipcRenderer.on('electron-trpc', (event, args) => {
+    console.log(event, args)
+  })
   exposeElectronTRPC();
 })
