@@ -1,20 +1,20 @@
 <script lang="ts">
   import { AppShell, AppRail, AppRailAnchor } from '@skeletonlabs/skeleton'
-  import Router, { location } from 'svelte-spa-router'
+  import Router from 'svelte-spa-router'
   import Icon from '@iconify/svelte'
   import { setAppContext } from '../../context/App'
   import { Header as AppHeader } from './Header'
   import { Login } from './Login'
-  import { Profile } from './Profile'
+  import { Session } from './Session'
 
-  const { profiles, currentProfile } = setAppContext()
+  const { sessions, currentSession } = setAppContext()
 
-  $: profileList = Array.from($profiles.values())
+  $: sessionList = Array.from($sessions.values())
 
   const prefix = '/app'
   const routes = {
     '/login': Login,
-    '/profile/:id': Profile,
+    '/session/:id': Session,
   }
 </script>
 
@@ -29,15 +29,15 @@
         <AppRailAnchor href="/">(icon)</AppRailAnchor>
       </svelte:fragment>
 
-      {#each profileList as profile}
+      {#each sessionList as session}
         <AppRailAnchor
-          selected={$currentProfile?.id === profile.id}
-          href={`#/app/profile/${profile.id}`}
+          selected={$currentSession?.id === session.id}
+          href={`#/app/session/${session.id}`}
         >
           <svelte:fragment slot="lead">
-            <span class="badge bg-primary-600">{profile.name}</span>
+            <span class="badge bg-primary-600">{session.name}</span>
           </svelte:fragment>
-          <span>{profile.region}</span>
+          <span>{session.region}</span>
         </AppRailAnchor>
       {/each}
 

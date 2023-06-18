@@ -8,18 +8,18 @@
 
   let profiles: AWSRouterOutputs['profiles'] = []
   const { aws } = getAWSContext()
-  const { setCurrentProfile, profiles: appProfiles } = getAppContext()
+  const { sessions, clearCurrentSession } = getAppContext()
 
-  // login page should clear the current profile
-  setCurrentProfile(null)
+  // login page should clear the current session
+  clearCurrentSession()
 
   onMount(async () => {
     profiles = await aws.profiles.query()
   })
 
-  function selectProfile(profile: (typeof profiles)[number]) {
-    appProfiles.add(profile)
-    push(`/app/profile/${profile.id}`)
+  function createSession(session: (typeof profiles)[number]) {
+    const sessionId = sessions.create(session)
+    push(`/app/session/${sessionId}`)
   }
 </script>
 
@@ -34,7 +34,7 @@
     <ul>
       {#each profiles as profile}
         <li>
-          <a on:click={() => selectProfile(profile)}>
+          <a on:click={() => createSession(profile)}>
             <span class="badge bg-primary-600">Profile</span>
             <span class="flex-auto">{profile.name}</span>
             <span class="chip variant-filled">{profile.region}</span>
